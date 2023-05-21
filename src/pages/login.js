@@ -1,36 +1,25 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import LoginForm from '../components/Login/LoginForm';
+import cookie from 'cookie';
+import styles from '../styles/pages/Login.module.scss';
 
-const LoginPage = () => {
+export default function LoginPage() {
     const router = useRouter();
 
     useEffect(() => {
-        const checkAuthentication = async () => {
-            try {
-                // Add your authentication logic here
-                // For example, you can check if the user has a valid authentication token
-                const authToken = localStorage.getItem('authToken'); // Replace with your actual authentication token retrieval logic
+        const cookies = cookie.parse(document.cookie);
+        const authToken = cookies.authToken;
 
-                if (authToken) {
-                    // User has a token, redirect to the main page
-                    router.push('/');
-                }
-            } catch (error) {
-                console.error('Authentication Error:', error);
-                // Handle the authentication error, if necessary
-            }
-        };
-
-        checkAuthentication();
-    }, [router]);
+        if (authToken) {
+            router.push('/'); // redirects to home if authToken exists
+        }
+    }, []);
 
     return (
-        <div>
-            <h1>Login</h1>
+        <div className={styles.container}>
+            <img className={styles.logo} src="https://test.webaza.eu/test/wp-content/uploads/2023/05/Assi-logo-valge-mustal-3.png" alt="Logo" />
             <LoginForm />
         </div>
     );
-};
-
-export default LoginPage;
+}

@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
 import { useRouter } from 'next/router';
 
+import styles from '../../styles/pages/Login.module.scss';
+
 const LOGIN_USER_MUTATION = gql`
   mutation LoginUser($input: LoginInput!) {
     login(input: $input) {
       authToken
-      refreshToken
       user {
         id
         name
@@ -34,43 +35,60 @@ const LoginForm = () => {
                 },
             });
 
-            const { authToken, refreshToken, user } = data.login;
+            const { authToken, user } = data.login;
 
-            // Store the tokens in localStorage
-            localStorage.setItem('authToken', authToken);
-            // localStorage.setItem('refreshToken', refreshToken);
+            // Set the token in a browser cookie
+            document.cookie = `authToken=${authToken}; Path=/; Max-Age=${60 * 60 * 24}; ${process.env.NODE_ENV === 'production' ? 'Secure' : ''
+                }`;
 
-            // console.log('Auth Token:', authToken);
-            // console.log('Refresh Token:', refreshToken);
-            // console.log('User:', user);
+            console.log('Auth Token:', authToken);
+            console.log('User:', user);
 
             // Redirect to main page upon successful login
             router.push('/');
         } catch (error) {
-            console.error('Login Error:', error);
+            console.error('Incorrect username or password');
             // Display error message for incorrect login or password
-            // You can use state or a toast/notification component to display the error
         }
     };
 
     return (
-        <form onSubmit={handleFormSubmit}>
-            <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <button type="submit" disabled={loading}>
-                {loading ? 'Logging In...' : 'Log In'}
+        <form className={styles.form} onSubmit={handleFormSubmit}>
+            {/* Form inputs */}
+            <table className={`${styles.inputTable} ${styles.centerTable}`}>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input
+                                className={styles.input}
+                                type="text"
+                                placeholder="Assi kasutaja"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input
+                                className={styles.input}
+                                type="password"
+                                placeholder="Salasõna"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            {/* Form button */}
+            <button className={styles.button} type="submit" disabled={loading}>
+                {loading ? 'Login sisse...' : 'Logi sisse'}
             </button>
-            {error && <p>Error: {error.message}</p>}
+
+            {/* Error message */}
+            {error && <p className={styles.error}>Vale parool või salasõna</p>}
         </form>
     );
 };

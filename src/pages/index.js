@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { GET_CATEGORIES_WITH_POSTS } from '../lib/queries';
 import Layout from '../components/Layout';
 import Container from '../components/Container';
+import withAuth from '../hocs/withAuth';
 
-export default function Home() {
+function Home() {
   const { loading, error, data } = useQuery(GET_CATEGORIES_WITH_POSTS);
 
   if (loading) return <p>Loading...</p>;
@@ -32,3 +33,4 @@ export default function Home() {
   );
 }
 
+export default withAuth(Home);

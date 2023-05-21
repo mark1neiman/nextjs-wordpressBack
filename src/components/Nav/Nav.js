@@ -1,7 +1,7 @@
-import { useRouter } from 'next/router';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { FaSearch } from 'react-icons/fa';
+import { useRouter } from 'next/router';
 
 import useSite from 'hooks/use-site';
 import useSearch, { SEARCH_STATE_LOADED } from 'hooks/use-search';
@@ -49,7 +49,6 @@ const Nav = () => {
       removeResultsRoving();
       removeDocumentOnClick();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchVisibility]);
 
   function addDocumentOnClick() {
@@ -125,13 +124,22 @@ const Nav = () => {
     return () => {
       document.removeEventListener('keydown', escFunction, false);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('refreshToken');
+    document.cookie = 'authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     router.push('/login');
+  };
+
+  const isUserLoggedIn = () => {
+    if (typeof window !== 'undefined') {
+      const authToken = document.cookie.replace(
+        /(?:(?:^|.*;\s*)authToken\s*=\s*([^;]*).*$)|^.*$/,
+        '$1'
+      );
+      return authToken !== '';
+    }
+    return false;
   };
 
   return (
@@ -187,7 +195,11 @@ const Nav = () => {
           )}
         </div>
         <div className={styles.navLogout}>
-          <button onClick={handleLogout}>Logout</button>
+          {isUserLoggedIn() ? (
+            <button onClick={handleLogout}>Logout</button>
+          ) : (
+            <Link href="/login">Login</Link>
+          )}
         </div>
       </Section>
     </nav>
