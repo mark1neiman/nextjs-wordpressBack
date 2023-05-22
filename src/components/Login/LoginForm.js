@@ -38,9 +38,7 @@ const LoginForm = () => {
             const { authToken, user } = data.login;
 
             // Set the token in a browser cookie
-            document.cookie = `authToken=${authToken}; Path=/; Max-Age=${60 * 60 * 24}; ${process.env.NODE_ENV === 'production' ? 'Secure' : ''
-                }`;
-
+            document.cookie = `authToken=${authToken}; Path=/; Expires=${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)}; ${process.env.NODE_ENV === 'production' ? 'Secure' : ''}`;
             console.log('Auth Token:', authToken);
             console.log('User:', user);
 

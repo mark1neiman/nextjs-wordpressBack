@@ -21,3 +21,30 @@ export const GET_CATEGORIES_WITH_POSTS = gql`
     }
   }
 `;
+
+export const GET_CATEGORIES_QUERY = gql`
+query GetCategoriesWithPosts {
+  categories(first: 100) {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}
+`;
+
+export const GET_POSTS_BY_CATEGORY_QUERY = gql`
+  query GetPostsByCategory($categoryId: ID!) {
+    posts(category: $categoryId) {
+      edges {
+        node {
+          id
+          title
+          slug
+        }
+      }
+    }
+  }
+`;

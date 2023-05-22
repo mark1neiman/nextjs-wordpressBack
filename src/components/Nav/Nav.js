@@ -23,6 +23,8 @@ const Nav = () => {
   const { metadata = {}, menus } = useSite();
   const { title } = metadata;
 
+
+
   const navigationLocation = process.env.WORDPRESS_MENU_LOCATION_NAVIGATION || MENU_LOCATION_NAVIGATION_DEFAULT;
   const navigation = findMenuByLocation(menus, navigationLocation);
 
@@ -155,12 +157,6 @@ const Nav = () => {
         </ul>
         <div className={styles.navSearch}>
           {searchVisibility === SEARCH_HIDDEN && (
-            <button onClick={handleOnToggleSearch} disabled={!searchIsLoaded}>
-              <span className="sr-only">Toggle Search</span>
-              <FaSearch />
-            </button>
-          )}
-          {searchVisibility === SEARCH_VISIBLE && (
             <form ref={formRef} action="/search" data-search-is-active={!!query}>
               <input
                 type="search"
