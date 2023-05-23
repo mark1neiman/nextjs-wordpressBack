@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { FaSearch } from 'react-icons/fa';
-import { useRouter } from 'next/router';
 
+import SearchInput from '../../components/SearchInput';
+import SearchResults from '../../components/SearchResults';
+import { useQuery, gql } from '@apollo/client';
+import { useRouter } from 'next/router';
+import { getPostBySlug } from '../../data/posts';
 import useSite from 'hooks/use-site';
 import useSearch, { SEARCH_STATE_LOADED } from 'hooks/use-search';
 import { postPathBySlug } from 'lib/posts';
@@ -11,7 +14,6 @@ import { findMenuByLocation, MENU_LOCATION_NAVIGATION_DEFAULT } from 'lib/menus'
 import Section from 'components/Section';
 
 import styles from './Nav.module.scss';
-import NavListItem from 'components/NavListItem';
 
 const SEARCH_VISIBLE = 'visible';
 const SEARCH_HIDDEN = 'hidden';
@@ -20,19 +22,16 @@ const Nav = () => {
   const router = useRouter();
   const formRef = useRef();
   const [searchVisibility, setSearchVisibility] = useState(SEARCH_HIDDEN);
+  const [searchQuery, setSearchQuery] = useState('')
   const { metadata = {}, menus } = useSite();
   const { title } = metadata;
-
-
-
-  const navigationLocation = process.env.WORDPRESS_MENU_LOCATION_NAVIGATION || MENU_LOCATION_NAVIGATION_DEFAULT;
-  const navigation = findMenuByLocation(menus, navigationLocation);
-
   const { query, results, search, clearSearch, state } = useSearch({
     maxResults: 5,
   });
 
-  const searchIsLoaded = state === SEARCH_STATE_LOADED;
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
 
   useEffect(() => {
     if (searchVisibility === SEARCH_HIDDEN) {
@@ -135,10 +134,7 @@ const Nav = () => {
 
   const isUserLoggedIn = () => {
     if (typeof window !== 'undefined') {
-      const authToken = document.cookie.replace(
-        /(?:(?:^|.*;\s*)authToken\s*=\s*([^;]*).*$)|^.*$/,
-        '$1'
-      );
+      const authToken = document.cookie.replace(/(?:(?:^|.*;\s*)authToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
       return authToken !== '';
     }
     return false;
@@ -150,51 +146,14 @@ const Nav = () => {
         <p className={styles.navName}>
           <Link href="/">{title}</Link>
         </p>
-        <ul className={styles.navMenu}>
-          {navigation?.map((listItem) => {
-            return <NavListItem key={listItem.id} className={styles.navSubMenu} item={listItem} />;
-          })}
-        </ul>
-        <div className={styles.navSearch}>
-          {searchVisibility === SEARCH_HIDDEN && (
-            <form ref={formRef} action="/search" data-search-is-active={!!query}>
-              <input
-                type="search"
-                name="q"
-                value={query || ''}
-                onChange={handleOnSearch}
-                autoComplete="off"
-                placeholder="Search..."
-                required
-              />
-              <div className={styles.navSearchResults}>
-                {results.length > 0 && (
-                  <ul>
-                    {results.map(({ slug, title }, index) => {
-                      return (
-                        <li key={slug}>
-                          <Link tabIndex={index} href={postPathBySlug(slug)}>
-                            {title}
-                          </Link>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                )}
-                {results.length === 0 && (
-                  <p>
-                    Sorry, not finding anything for <strong>{query}</strong>
-                  </p>
-                )}
-              </div>
-            </form>
-          )}
+        <div>
+          <SearchInput onSearch={handleSearch} />
         </div>
         <div className={styles.navLogout}>
           {isUserLoggedIn() ? (
-            <button onClick={handleLogout}>Logout</button>
+            <button onClick={handleLogout}>Logi välja</button>
           ) : (
-            <Link href="/login">Login</Link>
+            <Link href="/login">Logi sisse</Link>
           )}
         </div>
       </Section>

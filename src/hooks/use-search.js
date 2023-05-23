@@ -3,7 +3,7 @@ import Fuse from 'fuse.js';
 
 import { getSearchData } from 'lib/search';
 
-const SEARCH_KEYS = ['slug', 'title'];
+const SEARCH_KEYS = ['slug', 'title', 'featuredImage'];
 
 export const SEARCH_STATE_LOADING = 'LOADING';
 export const SEARCH_STATE_READY = 'READY';
@@ -29,9 +29,6 @@ export function useSearchState() {
       isCaseSensitive: false,
     });
   }
-
-  // On load, we want to immediately pull in the search index, which we're
-  // storing clientside and gets built at compile time
 
   useEffect(() => {
     (async function getData() {
@@ -66,33 +63,26 @@ export default function useSearch({ defaultQuery = null, maxResults } = {}) {
 
   let results = [];
 
-  // If we have a query, make a search. Otherwise, don't modify the
-  // results to avoid passing back empty results
-
   if (client && query) {
-    results = client.search(query).map(({ item }) => item);
+    results = client.search(query).map(({ item }) => {
+      const { title, featuredImage } = item;
+      const modifiedItem = { ...item, title };
+      if (featuredImage) {
+        modifiedItem.featuredImage = featuredImage;
+      }
+      return modifiedItem;
+    });
   }
 
   if (maxResults && results.length > maxResults) {
     results = results.slice(0, maxResults);
   }
 
-  // If the defaultQuery argument changes, the hook should reflect
-  // that update and set that as the new state
-
   useEffect(() => setQuery(defaultQuery), [defaultQuery]);
-
-  /**
-   * handleSearch
-   */
 
   function handleSearch({ query }) {
     setQuery(query);
   }
-
-  /**
-   * handleClearSearch
-   */
 
   function handleClearSearch() {
     setQuery(null);

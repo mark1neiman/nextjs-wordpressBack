@@ -95,7 +95,10 @@ export default function Post({ post, socialImage, related }) {
           isSticky={isSticky}
         />
       </Header>
+      <Container className={styles.postFooter}>
+          <p className={styles.postModified}>Last updated on {formatDate(modified)}.</p>
 
+        </Container>
       <Content>
         <Section>
           <Container>
@@ -110,27 +113,6 @@ export default function Post({ post, socialImage, related }) {
       </Content>
 
       <Section className={styles.postFooter}>
-        <Container>
-          <p className={styles.postModified}>Last updated on {formatDate(modified)}.</p>
-          {Array.isArray(relatedPostsList) && relatedPostsList.length > 0 && (
-            <div className={styles.relatedPosts}>
-              {relatedPostsTitle.name ? (
-                <span>
-                  More from <Link href={relatedPostsTitle.link}>{relatedPostsTitle.name}</Link>
-                </span>
-              ) : (
-                <span>More Posts</span>
-              )}
-              <ul>
-                {relatedPostsList.map((post) => (
-                  <li key={post.title}>
-                    <Link href={postPathBySlug(post.slug)}>{post.title}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </Container>
       </Section>
     </Layout>
   );

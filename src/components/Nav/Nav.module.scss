@@ -6,6 +6,21 @@
   padding: 0 1rem;
 }
 
+.navLogout button {
+  background-color: #A54BFA;
+  border: 0;
+  width: 120px;
+  height: 50px;
+  border-radius: 5px;
+  color: #fff;
+
+  &:hover {
+    transition: 0.2s;
+    background-color: #6f17c2;
+    cursor: pointer;
+  }
+}
+
 .navSection {
   display: flex;
   align-items: center;
@@ -27,8 +42,9 @@
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  flex-grow: 1;
+
   margin: 0.8em 0 0;
+
 
   @media (min-width: 480px) {
     justify-content: flex-start;
@@ -41,6 +57,7 @@
     font-weight: bold;
     text-decoration: none;
     border-bottom: solid 2px transparent;
+    cursor: default;
 
     @media (min-width: 480px) {
       padding: 0.5em;
@@ -48,7 +65,7 @@
     }
 
     &:hover {
-      color: $color-primary;
+      color: #A54BFA;
     }
   }
 }
@@ -59,39 +76,58 @@
   align-items: center;
   justify-content: center;
 
+
+
   form {
     display: flex;
     align-items: center;
     position: relative;
     width: 100%;
     padding: 0.5em;
+    border-radius: 10px;
+    margin-right: auto;
+    margin-left: auto;
+
+
+
 
     input {
       font-size: 0.845em;
-      margin-left: 1em;
       height: 60px;
-      width: 80vh;
+      width: 50%;
+      border: none;
+      outline: none;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
 
+    input:focus {
+      transition: 0.2s;
+      border: 1px solid #A54BFA;
     }
   }
 }
 
 .navSearchResults {
+
   display: none;
   position: absolute;
   top: 100%;
-  left: 0;
-  width: 100%;
   background-color: white;
   padding: 1.5em;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
   border-top: solid 5px $color-primary;
   z-index: 999;
+  border-top: solid 5px #A54BFA;
+  border-radius: 5px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+
 
 
   @media (min-width: 480px) {
-    width: 30em;
-    margin-right: 0;
+    width: 50%;
   }
 
   [data-search-is-active="true"] & {
@@ -131,7 +167,6 @@
 .navMenu {
   display: flex;
   align-items: center;
-  flex-grow: 0;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -204,4 +239,5 @@
       }
     }
   }
+
 }

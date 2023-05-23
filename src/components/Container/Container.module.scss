@@ -1,8 +1,11 @@
 @import "styles/settings/__settings";
 
 .container {
-  max-width: 60rem;
+  max-width: 80rem;
   padding: 0 2rem;
   margin: 0 auto;
   background-color: #fbfbfc;
+}
+.postFooter{
+  margin: 0;
 }
