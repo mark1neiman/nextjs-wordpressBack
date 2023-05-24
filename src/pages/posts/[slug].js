@@ -96,7 +96,7 @@ export default function Post({ post, socialImage, related }) {
         />
       </Header>
       <Container className={styles.postFooter}>
-          <p className={styles.postModified}>Last updated on {formatDate(modified)}.</p>
+          <p className={styles.postModified}>Viimati värskendatud {formatDate(modified)}.</p>
 
         </Container>
       <Content>

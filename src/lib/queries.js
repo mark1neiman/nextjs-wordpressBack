@@ -68,3 +68,20 @@ export const QUERY_POSTS = gql`
     }
   }
 `;
+
+export const SEARCH_POSTS_QUERY = gql`
+  query SearchPosts($searchQuery: String!) {
+    posts(where: { search: $searchQuery }) {
+      nodes {
+        id
+        title
+        slug
+        featuredImage {
+          node {
+            sourceUrl(size: THUMBNAIL)
+          }
+        }
+      }
+    }
+  }
+`;

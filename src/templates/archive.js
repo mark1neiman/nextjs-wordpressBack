@@ -1,5 +1,4 @@
 import { Helmet } from 'react-helmet';
-
 import { WebpageJsonLd } from 'lib/json-ld';
 import { helmetSettingsFromMetadata } from 'lib/site';
 import useSite from 'hooks/use-site';
@@ -58,25 +57,26 @@ export default function TemplateArchive({
       <Section>
         <Container>
           <SectionTitle>Posts</SectionTitle>
-          {Array.isArray(posts) && (
-            <>
-              <ul className={styles.posts}>
-                {posts.map((post) => {
-                  return (
-                    <li key={post.slug}>
-                      <PostCard post={post} options={postOptions} />
-                    </li>
-                  );
-                })}
-              </ul>
-              {pagination && (
-                <Pagination
-                  currentPage={pagination?.currentPage}
-                  pagesCount={pagination?.pagesCount}
-                  basePath={pagination?.basePath}
-                />
-              )}
-            </>
+          <div className={styles.posts}>
+            {Array.isArray(posts) && (
+              <>
+                {posts.map((post) => (
+                  <div key={post.slug}>
+                    {post.featuredImage && (
+                      <img src={post.featuredImage} alt={post.title} className={styles.featuredImage} />
+                    )}
+                    <PostCard post={post} options={postOptions} />
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+          {pagination && (
+            <Pagination
+              currentPage={pagination?.currentPage}
+              pagesCount={pagination?.pagesCount}
+              basePath={pagination?.basePath}
+            />
           )}
         </Container>
       </Section>
