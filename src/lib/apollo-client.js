@@ -61,3 +61,7 @@ export const createApolloClient = (authToken) => {
     cache: new InMemoryCache(),
   });
 };
+export const apolloClient = new ApolloClient({
+  uri: process.env.WORDPRESS_GRAPHQL_ENDPOINT,
+  cache: new InMemoryCache()
+});

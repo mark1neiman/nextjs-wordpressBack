@@ -1,0 +1,325 @@
+CREATE TABLE подписка (
+  id SERIAL PRIMARY KEY,
+  пользователь_id INTEGER,
+  сообщество_id INTEGER,
+  FOREIGN KEY (пользователь_id) REFERENCES пользователи (id),
+  FOREIGN KEY (сообщество_id) REFERENCES сообщества (id)
+);
+
+
+
+
+INSERT INTO подписка (пользователь_id, сообщество_id)
+VALUES (1, 1),
+       (2, 1),
+       (3, 2),
+       (4, 2),
+       (5, 3),
+       (6, 3);
+
+
+
+
+
+pg_dump --dbname=vk --file=vk_dump.sql --inserts
+
+createdb vk_staging
+psql --dbname=vk_staging --file=vk_dump.sql
+
+SELECT * FROM подписка LIMIT 20;
+
+ALTER TABLE подписка
+ADD CONSTRAINT fk_подписка_пользователи FOREIGN KEY (пользователь_id)
+REFERENCES пользователи (id);
+
+ALTER TABLE фотографии
+ADD COLUMN metadata JSON;
+
+UPDATE фотографии
+SET metadata = json_build_object('id', id, 'url', url, 'size', size)
+WHERE metadata IS NULL;
+
+
+
+
+-- обавление столбца members типа массив в таблицу сообществ
+
+ALTER TABLE сообщества
+ADD COLUMN members INTEGER[];
+
+
+
+
+
+Поместить идентификаторы всех пользователей, являющихся членами сообщества с id = 3, в столбец members:
+sql
+Copy code
+UPDATE сообщества
+SET members = ARRAY(
+  SELECT пользователь_id
+  FROM подписка
+  WHERE сообщество_id = 3
+)
+WHERE id = 3;
+
+
+
+
+
+-- Создание пользовательского типа данных contacts
+CREATE TYPE contacts AS (
+  phone VARCHAR(20),
+  email VARCHAR(50)
+);
+
+-- Добавление столбца user_contacts типа contacts в таблицу пользователей
+ALTER TABLE пользователи
+ADD COLUMN user_contacts contacts;
+
+-- Заполнение столбца user_contacts значениями из соответствующих строк
+UPDATE пользователи
+SET user_contacts = ROW('1234567890', 'example@example.com')
+WHERE id = 21;
+
+-- Изменение email в столбце user_contacts для пользователя с id = 21
+UPDATE пользователи
+SET user_contacts = ROW('1234567890', 'test@somemail.ru')
+WHERE id = 21;
+
+
+SELECT
+  id AS идентификатор_видеофайла,
+  имея AS имя_владельца,
+  фамилия AS фамилия_владельца,
+  основная_фотография_url AS url_основной_фотографии,
+  url_видеофайла,
+  размер AS размер_видеофайла
+FROM
+  видеофайлы
+JOIN
+  пользователи ON видеофайлы.владелец_id = пользователи.id
+ORDER BY
+  размер DESC
+LIMIT 10;
+
+
+SELECT
+  видеофайлы.id AS идентификатор_видеофайла,
+  пользователи.имя AS имя_владельца,
+  пользователи.фамилия AS фамилия_владельца,
+  пользователи.основная_фотография_url AS url_основной_фотографии,
+  видеофайлы.url AS url_видеофайла,
+  видеофайлы.размер AS размер_видеофайла
+FROM
+  видеофайлы
+JOIN
+  пользователи ON видеофайлы.владелец_id = пользователи.id
+ORDER BY
+  размер DESC
+LIMIT 10;
+
+
+
+CREATE TEMPORARY TABLE temp AS (
+  SELECT
+    id AS идентификатор_видеофайла,
+    имея AS имя_владельца,
+    фамилия AS фамилия_владельца,
+    основная_фотография_url AS url_основной_фотографии,
+    url_видеофайла,
+    размер AS размер_видеофайла
+  FROM
+    видеофайлы
+  JOIN
+    пользователи ON видеофайлы.владелец_id = пользователи.id
+  ORDER BY
+    размер DESC
+  LIMIT 10
+);
+SELECT * FROM temp;
+
+
+
+WITH temp AS (
+  SELECT
+    id AS идентификатор_видеофайла,
+    имея AS имя_владельца,
+    фамилия AS фамилия_владельца,
+    основная_фотография_url AS url_основной_фотографии,
+    url_видеофайла,
+    размер AS размер_видеофайла,
+    ROW_NUMBER() OVER (ORDER BY размер DESC) AS rn
+  FROM
+    видеофайлы
+  JOIN
+    пользователи ON видеофайлы.владелец_id = пользователи.id
+)
+SELECT * FROM temp WHERE rn <= 10;
+
+
+
+-- Создание ролей для пользователей
+CREATE ROLE "Марк Нейман";
+CREATE ROLE "Крам Намйен";
+
+-- Создание ролей для групп
+CREATE ROLE аналитики;
+CREATE ROLE тестировщики;
+
+-- Помещение пользователей в группы
+GRANT аналитики TO "Марк Нейман";
+GRANT тестировщики TO "Крам Намйен";
+
+-- Настройка прав для групп
+-- Группа аналитиков имеет только право на чтение данных
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO аналитики;
+
+-- Группа тестировщиков имеет все права
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO тестировщики;
+
+-- Подключение к БД vk под обоими пользователями и проверка прав
+
+
+CREATE EXTENSION 
+
+
+-- Изменяемое представление
+CREATE OR REPLACE VIEW изменяемое_представление AS
+SELECT * FROM видеофайлы WHERE условие;
+
+-- Неизменяемое представление
+CREATE VIEW неизменяемое_представление AS
+SELECT * FROM видеофайлы WHERE условие;
+
+
+
+
+Создание процедуры для проверки владельца фотографий:
+
+sql
+Copy code
+CREATE OR REPLACE FUNCTION проверить_владельца_фотографий()
+RETURNS VOID AS $$
+BEGIN
+  UPDATE пользователи
+  SET main_photo_id = NULL
+  WHERE main_photo_id IS NOT NULL
+    AND main_photo_id NOT IN (
+      SELECT id
+      FROM фотографии
+      WHERE владелец_id = пользователи.id
+    );
+END;
+$$
+LANGUAGE plpgsql;
+
+-- Вызов процедуры
+SELECT проверить_владельца_фотографий();
+
+
+
+Создание триггера на обновление для проверки владельца фотографии:
+
+sql
+Copy code
+CREATE OR REPLACE FUNCTION проверить_владельца_фотографии_trigger()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.main_photo_id IS NOT NULL AND NEW.main_photo_id NOT IN (
+    SELECT id
+    FROM фотографии
+    WHERE владелец_id = NEW.пользователь_id
+  ) THEN
+    NEW.main_photo_id = NULL;
+  END IF;
+  RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER проверить_владельца_фотографии
+BEFORE UPDATE ON пользователи
+FOR EACH ROW
+EXECUTE FUNCTION проверить_владельца_фотографии_trigger();
+
+
+
+
+Создание функции для поиска пользователя с наибольшим количеством сообщений:
+
+sql
+Copy code
+CREATE OR REPLACE FUNCTION найти_пользователя_с_наибольшим_количеством_сообщений(пользователь_id INTEGER)
+RETURNS INTEGER AS $$
+DECLARE
+  искомый_пользователь INTEGER;
+BEGIN
+  SELECT отправитель_id INTO искомый_пользователь
+  FROM сообщения
+  WHERE получатель_id = пользователь_id
+  GROUP BY отправитель_id
+  ORDER BY COUNT(*) DESC
+  LIMIT 1;
+
+  RETURN искомый_пользователь;
+END;
+$$
+LANGUAGE plpgsql;
+
+-- Вызов функции
+SELECT найти_пользователя_с_наибольшим_количеством_сообщений(1);
+
+-- Удаление пользователей без дружеских связей с подтвержденным статусом :D
+
+BEGIN;
+DELETE FROM пользователи
+WHERE id NOT IN (
+  SELECT DISTINCT CASE
+    WHEN пользователь1_id = id THEN пользователь2_id
+    ELSE пользователь1_id
+  END
+  FROM дружба
+  WHERE статус = 'подтвержден'
+);
+-- Удаление связанных данных для удаленных пользователей
+-- ...
+COMMIT;
+
+
+-- Запрос, показывающий количество загруженных фотографий и видеофайлов для всех пользователей:
+
+sql
+Copy code
+SELECT
+  пользователь_id,
+  COUNT(*) FILTER (WHERE тип = 'фотография') AS количество_фотографий,
+  COUNT(*) FILTER (WHERE тип = 'видео') AS количество_видеофайлов,
+  RANK() OVER (ORDER BY COUNT(*) DESC) AS ранг
+FROM
+  контент
+GROUP BY
+  пользователь_id;
+
+
+-- Для каждой группы (сообщества) найти средний размер видеофайлов и информацию о пользователе, загрузившем самый большой видеофайл:
+
+sql
+Copy code
+SELECT
+  сообщества.id AS идентификатор_группы,
+  сообщества.название AS имя_группы,
+  сообщества.фамилия AS фамилия_группы,
+  AVG(видеофайлы.размер) AS средний_размер_видеофайла,
+  FIRST_VALUE(пользователи.id) OVER (PARTITION BY сообщества.id ORDER BY видеофайлы.размер DESC) AS идентификатор_пользователя,
+  FIRST_VALUE(пользователи.имя) OVER (PARTITION BY сообщества.id ORDER BY видеофайлы.размер DESC) AS имя_пользователя,
+  FIRST_VALUE(пользователи.фамилия) OVER (PARTITION BY сообщества.id ORDER BY видеофайлы.размер DESC) AS фамилия_пользователя
+FROM
+  сообщества
+JOIN
+  подписка ON подписка.сообщество_id = сообщества.id
+JOIN
+  пользователи ON подписка.пользователь_id = пользователи.id
+JOIN
+  видеофайлы ON видеофайлы.владелец_id = пользователи.id
+GROUP BY
+  сообщества.id;

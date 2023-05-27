@@ -22,7 +22,7 @@
     height: 300px;
     padding: 16px;
     background: linear-gradient(45deg, #ffffff 50%, #898989 50%);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     margin-bottom: 15%;
 }
@@ -107,6 +107,7 @@
     /* Maintain the aspect ratio of the logo */
     margin-bottom: 50px;
     /* Adjust the margin as needed */
+    align-items: center;
 }
 
 // Media queries for mobile devices

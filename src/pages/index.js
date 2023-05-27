@@ -14,7 +14,7 @@ function Home() {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-
+  console.log(data);
   return (
     <Layout>
       <Container>
@@ -29,9 +29,8 @@ function Home() {
                       <div className={styles.icon}>
                         <FontAwesomeIcon icon={faFile} />
                       </div>
-
                       <span className={styles.postTitle}>
-                        <Link href={`/posts/${post.slug}`}>{post.title}</Link>
+                        <Link href={`/posts/${category.slug}/${post.slug}`}>{post.title}</Link>
                       </span>
                     </li>
                   ))}

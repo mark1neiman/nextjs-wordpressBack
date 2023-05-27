@@ -3,8 +3,12 @@ import { useRouter } from 'next/router';
 import LoginForm from '../components/Login/LoginForm';
 import cookie from 'cookie';
 import styles from '../styles/pages/Login.module.scss';
+import Meta from '../components/Layout/Meta';
+
+
 
 export default function LoginPage() {
+    
     const router = useRouter();
 
     useEffect(() => {
@@ -17,9 +21,11 @@ export default function LoginPage() {
     }, []);
 
     return (
+        <Meta>
         <div className={styles.container}>
             <img className={styles.logo} src="https://test.webaza.eu/test/wp-content/uploads/2023/05/Assi-logo-valge-mustal-3.png" alt="Logo" />
             <LoginForm />
         </div>
+        </Meta>
     );
 }

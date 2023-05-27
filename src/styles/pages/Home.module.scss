@@ -38,12 +38,12 @@
 
 .categoryTable {
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 2px;
   padding: 20px;
   margin-bottom: 20px;
   width: calc(33.3333% - 20px);
   /* Subtract the margin-right value */
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
   /* Add box shadow */
 }
 
@@ -85,14 +85,18 @@
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  justify-content: flex-start
+
 }
 
 .postItem {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  font-size: 16px;
+  font-size: 14px;
+}
+
+.table {
+  display: flex;
 }
 
 .icon {
@@ -102,11 +106,13 @@
 
 .postTitle {
   flex-grow: 1;
+  display: flex;
 
 }
 
 .postList a {
   color: #212121;
+  display: flex;
 
   /* Change the color to your desired color */
 }
