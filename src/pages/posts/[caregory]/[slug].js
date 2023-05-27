@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFile } from '@fortawesome/free-solid-svg-icons'
 
 import { useState, useEffect } from 'react'
-
+import withAuth from '../../../hocs/withAuth';
 
 const PostPage = () => {
   const router = useRouter();
@@ -126,4 +126,4 @@ const PostPage = () => {
   );
 };
 
-export default PostPage;
+export default withAuth(PostPage);
