@@ -68,9 +68,6 @@ const PostPage = () => {
 
     <Layout>
       <div className={styles.layoutcontainer}>
-        <Header>
-          <h1 className={styles.title}>{post.title}</h1>
-        </Header>
         <Section>
           <Container>
 
@@ -114,6 +111,7 @@ const PostPage = () => {
                 )}
               </div>
               <div className={styles.content}>
+                <h1 className={styles.title}>{post.title}</h1>
                 <div dangerouslySetInnerHTML={{ __html: post.content }} />
               </div>
             </div>
