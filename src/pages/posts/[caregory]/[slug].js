@@ -123,5 +123,5 @@ const PostPage = () => {
 
   );
 };
-
-export default withAuth(PostPage);
+export const getServerSideProps = withAuth();
+export default PostPage;

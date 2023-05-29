@@ -1,21 +1,28 @@
-import cookies from 'cookie';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import cookie from 'cookie';
 
-export default function withAuth(Component) {
-    return function AuthenticatedComponent(props) {
-        const router = useRouter();
+export default function withAuth(getServerSidePropsFunc) {
+    return async (ctx) => {
+        const cookies = ctx.req ? cookie.parse(ctx.req.headers.cookie || '') : undefined;
+        const authToken = cookies && cookies.authToken;
 
-        useEffect(() => {
-            if (typeof window !== 'undefined') {
-                const { authToken } = cookies.parse(document.cookie);
-
-                if (!authToken) {
-                    router.push('/login');
+        if (!authToken) {
+            return {
+                redirect: {
+                    destination: '/login',
+                    permanent: false,
                 }
-            }
-        }, []);
+            };
+        }
 
-        return <Component {...props} />;
+        let componentProps = {};
+        if (getServerSidePropsFunc) {
+            componentProps = await getServerSidePropsFunc(ctx);
+        }
+
+        return {
+            props: {
+                ...componentProps,
+            }
+        };
     }
 }
