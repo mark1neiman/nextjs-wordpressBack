@@ -84,10 +84,15 @@ const PostPage = () => {
                     {formattedModifiedDate}</p>
                   <div>
                     <span className={styles.span}>Kategooria: </span>
-                    {categories.map((category) => (
-                      <span key={category.databaseId}>{category.name}</span>
+                    {categories.map((category, index) => (
+                      <span key={category.databaseId}>
+                        {category.name}
+                        {/* Add a comma and a space if it's not the last category */}
+                        {index < categories.length - 1 ? ', ' : ''}
+                      </span>
                     ))}
                   </div>
+
                   <hr />
                 </div>
                 {categories.length > 0 && (

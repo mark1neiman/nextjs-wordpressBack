@@ -11,7 +11,7 @@ import { faFile } from '@fortawesome/free-solid-svg-icons';
 function Home() {
   const { loading, error, data } = useQuery(GET_CATEGORIES_WITH_POSTS);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>ASSI laeb O_O...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   return (

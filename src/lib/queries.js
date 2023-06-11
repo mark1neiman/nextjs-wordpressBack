@@ -157,6 +157,16 @@ export const ALL_POSTS_QUERY1 = gql`
         slug
         content
         date
+        author {
+          node {
+            name
+          }
+        }
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
         categories {
           nodes {
             name

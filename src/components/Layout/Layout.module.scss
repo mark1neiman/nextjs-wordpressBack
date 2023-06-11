@@ -4,3 +4,19 @@
   min-height: 100vh;
   background-color: #fbfbfc;
 }
+
+.logoText {
+  font-weight: bold;
+  font-style: italic;
+  font-size: 23px;
+  text-transform: capitalize;
+  color: #000;
+  padding-bottom: 15px;
+}
+
+.logo {
+  width: 150px;
+  height: auto;
+  margin-bottom: 50px;
+  align-items: center;
+}

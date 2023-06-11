@@ -32,7 +32,10 @@ export default class MyDocument extends Document {
   render() {
     return (
       <Html {...this.helmetHtmlAttrComponents}>
-        <Head>{this.helmetHeadComponents}</Head>
+        <Head>{this.helmetHeadComponents}
+          <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+        </Head>
         <body {...this.helmetBodyAttrComponents}>
           <Main />
           <NextScript />

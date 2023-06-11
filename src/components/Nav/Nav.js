@@ -48,8 +48,8 @@ const Nav = () => {
           <Link href="/">
             <img src="https://test.webaza.eu/test/wp-content/uploads/2023/05/Assi-logo-valge-mustal-3.png" />
           </Link>
+          <span className={styles.wikiText}>Wiki</span>
         </p>
-
         <div className={styles.searchfield}>
           <SearchInput onSearch={handleSearch} />
         </div>
