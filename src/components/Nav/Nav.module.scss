@@ -25,7 +25,11 @@
 .navLogo {
   width: 150px;
   margin-top: 20px;
+  display: flex;
+  align-items: flex-end;
 }
+
+
 
 .navSection {
   display: flex;
@@ -253,4 +257,11 @@
     }
   }
 
+}
+
+.wikiText {
+  font-style: italic;
+  font-weight: bold;
+  margin-left: 10px;
+  font-size: 19px;
 }

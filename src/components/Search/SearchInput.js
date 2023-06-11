@@ -16,6 +16,12 @@ const SearchInput = () => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState('');
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      router.push(`/search/?q=${encodeURIComponent(query)}`);
+    }
+  };
+
   const handleChange = (e) => {
     const newQuery = e.target.value;
     setQuery(newQuery);
@@ -85,6 +91,7 @@ const SearchInput = () => {
           onFocus={handleFocus}
           onBlur={handleBlur}
           placeholder="Otsi..."
+          onKeyDown={handleKeyDown}
           ref={inputRef}
         />
         {query && focus && !isLoading && (
