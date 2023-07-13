@@ -15,7 +15,7 @@ const nextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true,
-  },
+  }
 };
 
 function parseEnvValue(value, defaultValue) {

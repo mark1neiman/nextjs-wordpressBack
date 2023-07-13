@@ -8,7 +8,7 @@
 
 .logoContainer {
     position: absolute;
-    top: 200px;
+    top: 300px;
     left: 0;
     right: 0;
     display: flex;
@@ -69,14 +69,14 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 16px;
-    background: linear-gradient(45deg, #DDE6ED, #9DB2BF);
-    box-shadow: 0 2px 4px #27374d61;
+    background: #ffffff00;
+
     border-radius: 10px;
     margin-bottom: 15%;
     position: relative;
     z-index: 1;
-    padding: 30px;
+    padding: 20px 50px 20px 50px;
+
 }
 
 .input {
@@ -101,22 +101,49 @@
     margin-bottom: 10px;
 }
 
+
+
+
 .button {
-    width: 100%;
-    padding: 8px;
-    background-color: #526D82;
-    color: #ffffff;
-    font-weight: bold;
-    height: 50px;
+    background-color: #202124;
     border: none;
-    border-radius: 4px;
+    color: white;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
     cursor: pointer;
-    transition: background-color 0.3s;
-    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px #27374d61;
 }
 
+.googleLogo {
+    width: 24px;
+    height: 24px;
+
+}
+
+.buttonText {
+    font-weight: bold;
+}
+
+.GoogleContainer {
+
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    margin: -10px 5px -10px -20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+}
+
+
+
 .button:hover {
-    background-color: #27374D;
+    background: linear-gradient(45deg, rgba(245, 245, 245, 1) 0%, rgba(242, 242, 242, 1) 50%, rgba(255, 255, 255, 1) 50%);
+    color: rgb(21, 21, 21);
+    transition: 0.6s;
 }
 
 .button:disabled {
@@ -173,12 +200,12 @@
 
 @media (min-width: 200px) and (max-width: 768px) {
     .logoContainer {
-        top: 120px;
+        top: 300px;
     }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
     .logoContainer {
-        top: 150px;
+        top: 300px;
     }
 }

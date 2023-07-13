@@ -1,9 +1,6 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+import { SessionProvider } from 'next-auth/react';
 import NextApp from 'next/app';
-import jwt from 'jsonwebtoken';
-import cookie from 'cookie';
 import { SiteContext, useSiteContext } from 'hooks/use-site';
 import { SearchProvider } from 'hooks/use-search';
 import { getSiteMetadata } from 'lib/site';
@@ -14,31 +11,6 @@ import { getAllMenus } from 'lib/menus';
 import 'styles/globals.scss';
 import 'styles/wordpress.scss';
 import variables from 'styles/_variables.module.scss';
-import { verifyAuthToken } from '../lib/auth';
-
-const AuthChecker = ({ children }) => {
-  const router = useRouter();
-
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      const cookies = cookie.parse(document.cookie);
-      const authToken = cookies.authToken;
-
-      if (authToken) {
-        const isValid = await verifyAuthToken(authToken);
-
-        if (!isValid) {
-          document.cookie = 'authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-          router.push('/login');
-        }
-      }
-    };
-
-    checkAuthentication();
-  }, []);
-
-  return children;
-};
 
 const App = ({ Component, pageProps = {}, metadata, recentPosts, categories, menus }) => {
   const site = useSiteContext({
@@ -54,16 +26,16 @@ const App = ({ Component, pageProps = {}, metadata, recentPosts, categories, men
   });
 
   return (
-    <ApolloProvider client={client}>
-      <SiteContext.Provider value={site}>
-        <SearchProvider>
-          <NextNProgress height={4} color={variables.progressbarColor} />
-          <AuthChecker>
+    <SessionProvider session={pageProps.session}>
+      <ApolloProvider client={client}>
+        <SiteContext.Provider value={site}>
+          <SearchProvider>
+            <NextNProgress height={4} color={variables.progressbarColor} />
             <Component {...pageProps} />
-          </AuthChecker>
-        </SearchProvider>
-      </SiteContext.Provider>
-    </ApolloProvider>
+          </SearchProvider>
+        </SiteContext.Provider>
+      </ApolloProvider>
+    </SessionProvider>
   );
 };
 

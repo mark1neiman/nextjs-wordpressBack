@@ -3,24 +3,21 @@ import { POST_BY_SLUG_QUERY_PAGE, RELATED_POSTS_QUERY } from "../../../lib/queri
 import { apolloClient } from "../../../lib/apollo-client";
 
 import { useRouter } from "next/router";
-import styles from "../../../styles/pages/Post.module.scss"; // Import your styles
+import styles from "../../../styles/pages/Post.module.scss";
 import Link from "next/link";
 
 import Layout from "components/Layout";
-import Header from "components/Header";
 import Section from "components/Section";
-
 import Container from "components/Container";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFile } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFile } from '@fortawesome/free-solid-svg-icons';
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import withAuth from '../../../hocs/withAuth';
 
 const PostPage = () => {
   const router = useRouter();
   const { slug } = router.query;
-
 
   const { loading, error, data } = useQuery(POST_BY_SLUG_QUERY_PAGE, {
     variables: { slug },
@@ -33,7 +30,6 @@ const PostPage = () => {
       fetchRelatedPosts(data.post);
     }
   }, [data]);
-
 
   const fetchRelatedPosts = async (post) => {
     try {
@@ -51,31 +47,33 @@ const PostPage = () => {
     }
   };
 
-
-
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   const post = data.post;
   const categories = data.post.categories.edges.map(({ node }) => node);
+  const categorySlug = categories.length ? categories[0].slug : 'uncategorized';
+  const categoryName = categories.length ? categories[0].name : 'Uncategorized';
 
   let modifiedDate = new Date(post.modified);
-
   let formattedModifiedDate = modifiedDate.toLocaleString('et-EE', { day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
-
-
     <Layout>
       <div className={styles.layoutcontainer}>
         <Section>
           <Container>
-
             <div className={styles.mainContainer}>
-
-
               <div className={styles.relatedPosts}>
                 <div className={styles.header}>
+                  {/* Breadcrumbs */}
+                  <nav className={styles.breadcrumbs}>
+                    <Link className={styles.breadcrumbshome} href="/">Kodu</Link>
+                    {' - '}
+                    <span>{categoryName}</span>
+                    {' - '}
+                    <span>{post.title}</span>
+                  </nav>
                   <p>
                     <span className={styles.span}>Kirjutas: </span>
                     {post.author?.node?.name}</p>
@@ -92,7 +90,6 @@ const PostPage = () => {
                       </span>
                     ))}
                   </div>
-
                   <hr />
                 </div>
                 {categories.length > 0 && (
@@ -123,10 +120,9 @@ const PostPage = () => {
           </Container>
         </Section>
       </div>
-    </Layout >
-
-
+    </Layout>
   );
 };
+
 export const getServerSideProps = withAuth();
 export default PostPage;

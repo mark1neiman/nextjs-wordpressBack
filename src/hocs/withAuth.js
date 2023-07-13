@@ -1,16 +1,15 @@
-import cookie from 'cookie';
+import { getSession } from "next-auth/react";
 
 export default function withAuth(getServerSidePropsFunc) {
     return async (ctx) => {
-        const cookies = ctx.req ? cookie.parse(ctx.req.headers.cookie || '') : undefined;
-        const authToken = cookies && cookies.authToken;
+        const session = await getSession(ctx);
 
-        if (!authToken) {
+        if (!session) {
             return {
                 redirect: {
-                    destination: '/login',
+                    destination: "/login",
                     permanent: false,
-                }
+                },
             };
         }
 
@@ -22,7 +21,8 @@ export default function withAuth(getServerSidePropsFunc) {
         return {
             props: {
                 ...componentProps,
-            }
+                session, // pass the session to the component props
+            },
         };
-    }
+    };
 }

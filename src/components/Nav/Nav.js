@@ -4,6 +4,7 @@ import Link from 'next/link';
 import SearchInput from '../../components/Search/SearchInput';
 import { useRouter } from 'next/router';
 import useSite from 'hooks/use-site';
+import { signOut, useSession } from 'next-auth/react';
 
 
 import Section from 'components/Section';
@@ -18,6 +19,7 @@ const Nav = () => {
   const { metadata = {}, menus } = useSite();
   const { title } = metadata;
   const [searchQuery, setSearchQuery] = useState('')
+  const { data: session } = useSession();
 
   //Seacrh functionality start
   const handleSearch = (query) => {
@@ -53,6 +55,14 @@ const Nav = () => {
         <div className={styles.searchfield}>
           <SearchInput onSearch={handleSearch} />
         </div>
+        <div className={styles.signoutButton}>
+          {session && (
+            <button onClick={() => signOut()}>
+              Logi välja
+            </button>
+          )}
+        </div>
+
       </Section>
     </nav>
   );

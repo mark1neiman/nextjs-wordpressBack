@@ -1,9 +1,9 @@
 {
-  "name": "next-wordpress-starter",
+  "name": "next-wordpress-assi-wiki",
   "homepage": "https://test.webaza.eu/",
   "version": "0.1.0",
-  "license": "",
-  "author": "Mark NEiman",
+  "license": "UNLICENSED",
+  "author": "Mark Neiman",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
@@ -37,6 +37,7 @@
     "jsonwebtoken": "^9.0.0",
     "loader-utils": "^3.2.1",
     "next": "13.4.0",
+    "next-auth": "^4.22.1",
     "next-iron-session": "^4.2.0",
     "nextjs-progressbar": "^0.0.16",
     "parameterize": "^1.0.0",

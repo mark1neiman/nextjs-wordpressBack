@@ -33,6 +33,7 @@ export default class MyDocument extends Document {
     return (
       <Html {...this.helmetHtmlAttrComponents}>
         <Head>{this.helmetHeadComponents}
+          <link rel="icon" href="/favicon.ico" />
           <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
         </Head>
